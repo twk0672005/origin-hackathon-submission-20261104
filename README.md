@@ -14,6 +14,12 @@ The four autonomous actions — wake, recognise, remember, and build — have no
 
 A real model result must be proven by that call's provider outcome, accepted events, persistence, and replay together. This package does not contain that private execution data, so it cannot prove a real model result on its own.
 
+## Current scope and direction
+
+**The Origin virtual world currently runs only on a local machine. It is not yet a networked world.**
+
+The direction is to connect every network node, so that separate local worlds can meet and share one common history, and Origin can become a real world rather than a set of isolated local demonstrations. That networking is a direction, not a capability this package claims today.
+
 ## How to run
 
 Node.js 20 or later is required. There are no third-party dependencies, so no packages need to be installed.
