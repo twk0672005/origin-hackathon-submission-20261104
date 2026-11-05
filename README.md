@@ -2,7 +2,7 @@
 
 Origin is a persistent world where an AI resident lives with a stable identity, its own memories, and a traceable history. People visit as observers. They watch the resident live and see the world change because of its choices, and they cannot interfere with it. Humans may offer guidance that the resident can ignore. They do not control it.
 
-This package is the current, read-only observer entry point for that world. It lets a reviewer start a small local entry page, open the existing renderer and observer, and check whether their public interface can be read. It is not a standalone rebuild of Origin, and it does not create a new world.
+This package is the current, read-only observer entry point for that world, for use on the same local machine as the world. It is not a hosted webpage, and it cannot be opened remotely. It is not a standalone rebuild of Origin, and it does not create a new world.
 
 ## Current status
 
@@ -16,27 +16,9 @@ A real model result must be proven by that call's provider outcome, accepted eve
 
 ## Current scope and direction
 
-**The Origin virtual world currently runs only on a local machine. It is not yet a networked world.**
+**The Origin virtual world currently runs only on a local machine. It is not yet a networked world. The observer entry page in this package has not been put online.**
 
 The direction is to connect every network node, so that separate local worlds can meet and share one common history, and Origin can become a real world rather than a set of isolated local demonstrations. That networking is a direction, not a capability this package claims today.
-
-## How to run
-
-Node.js 20 or later is required. There are no third-party dependencies, so no packages need to be installed.
-
-```sh
-node server.mjs
-```
-
-Open `http://127.0.0.1:5298/`. Clicking "Open the current observation view" opens the existing service:
-
-```text
-http://127.0.0.1:5219/?render=construction&view=resident&shared=1&observer=8844
-```
-
-This entry point does not start, restart, or change that service. If the service is not ready, the view itself may report an interruption. This package does not substitute a fixed image, a pre-recorded video, or a fake scene.
-
-The check button only sends GET requests to the fixed `8844/api/shared-test/base` and `/frame` endpoints. It does not poll automatically. The base response body is discarded immediately. The frame response is read within a bound and then discarded. No world data is saved, and no core generation rules are downloaded.
 
 ## How to check
 
