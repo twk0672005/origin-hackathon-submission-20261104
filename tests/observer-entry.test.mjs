@@ -4,7 +4,7 @@ import { readFile, readdir } from 'node:fs/promises';
 import { inspectPublicAvailability, PUBLIC_ENDPOINTS, RENDER_URL } from '../observer-target.mjs';
 import { createObserverServer } from '../server.mjs';
 
-test('只檢查固定8844的公開GET，不採預設舊埠或任何世界控制', async () => {
+test('Only checks the fixed 8844 public GET endpoints, no legacy ports and no world control', async () => {
   const calls = [];
   const result = await inspectPublicAvailability(async (url, options) => {
     calls.push({ url, options });
@@ -18,7 +18,7 @@ test('只檢查固定8844的公開GET，不採預設舊埠或任何世界控制'
   assert.equal(new URL(RENDER_URL).searchParams.get('observer'), '8844');
 });
 
-test('外部服務未開、非200、非JSON或過大時如實回未就緒', async () => {
+test('Reports not ready honestly when the external service is down, non-200, non-JSON, or too large', async () => {
   for (const fetcher of [async () => { throw new Error('Test upstream unavailable'); }, async () => new Response('{}', { status: 503 }), async () => new Response('{}', { status: 201, headers: { 'content-type': 'application/json' } }), async () => new Response('<html></html>', { headers: { 'content-type': 'text/html' } }), async () => new Response('{}', { headers: { 'content-type': 'application/json', 'content-length': '2000000' } })]) {
     const result = await inspectPublicAvailability(fetcher);
     assert.equal(result.status, 'DEPENDENCY_NOT_READY');
@@ -26,7 +26,7 @@ test('外部服務未開、非200、非JSON或過大時如實回未就緒', asyn
   }
 });
 
-test('本機入口可運行且唯讀，沒有舊場景或檔案瀏覽fallback', async () => {
+test('Local entry runs read-only, with no old scene or file-browsing fallback', async () => {
   const server = createObserverServer(async () => { throw new Error('Test upstream unavailable'); });
   await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
   const url = `http://127.0.0.1:${server.address().port}`;
@@ -39,9 +39,9 @@ test('本機入口可運行且唯讀，沒有舊場景或檔案瀏覽fallback', 
   } finally { const closed = new Promise(resolve => server.close(resolve)); server.closeAllConnections(); await closed; }
 });
 
-test('包內只有入口/純讀取程式，沒有私有或生成模組', async () => {
+test('Package contains only entry / pure-reading code, no private or generation modules', async () => {
   const entries = await readdir(new URL('..', import.meta.url), { recursive: true });
   for (const entry of entries) assert.doesNotMatch(entry, /(?:node_modules|dist|runtime|calls|\.env|\.sqlite|\.log$|receipt|key-loader|world-kernel|build-draft|fixture|plates|assembly-shapes|SSOT|whitepaper)/i);
   const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
-  for (const text of ['自主生活目前為部分完成', '正式 Stage2 未完成', '居民目前處於安靜觀察狀態']) assert(html.includes(text));
+  for (const text of ['Autonomous life is currently partially complete.', 'Formal Stage 2 is not complete.', 'The resident is currently in quiet observation.']) assert(html.includes(text));
 });
