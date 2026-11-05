@@ -1,63 +1,55 @@
-# Origin · 當前版本唯讀觀察入口
+# Origin — Read-Only Observer Package (Current Version)
 
-這是 Origin 比賽交件用的受限觀察包。它的唯一用途，是讓審查者在本機啟動一個唯讀入口，指向既有的 renderer 與 observer，檢查公開介面是否可讀。
+Origin is a persistent world where an AI resident lives with a stable identity, its own memories, and a traceable history. People visit as observers. They watch the resident live and see the world change because of its choices, and they cannot interfere with it. Humans may offer guidance that the resident can ignore. They do not control it.
 
-這個包不是一個可以獨立重建原點世界的完整應用，也不是一個替代場景。它不會生成世界，不會啟動模型，不會寫入世界，不會控制居民。
+This package is the current, read-only observer entry point for that world. It lets a reviewer start a small local entry page, open the existing renderer and observer, and check whether their public interface can be read. It is not a standalone rebuild of Origin, and it does not create a new world.
 
-## 現況
+## Current status
 
-**現況為 PARTIAL。自主生活目前為部分完成，正式 Stage2 未完成，居民目前處於安靜觀察狀態。**
+**Status: PARTIAL. Autonomous life is partially complete. Formal Stage 2 is not complete. The resident is currently in quiet observation.**
 
-這個包沒有以新的即時投影證明居民狀態，也沒有把公開介面可讀，當成自主生活成功。
+This package does not prove the resident's live status with a new live projection, and public interface readability on its own does not mean autonomous life has succeeded.
 
-## 執行
+The four autonomous actions — wake, recognise, remember, and build — have not yet been evidenced in this package by a real model result together with chain evidence. No tour cards or simulated provider results have been used to fill that gap.
 
-需要 Node.js 20 或以上，零第三方依賴，不必安裝套件。
+A real model result must be proven by that call's provider outcome, accepted events, persistence, and replay together. This package does not contain that private execution data, so it cannot prove a real model result on its own.
+
+## How to run
+
+Node.js 20 or later is required. There are no third-party dependencies, so no packages need to be installed.
 
 ```sh
 node server.mjs
 ```
 
-開啟 `http://127.0.0.1:5298/`。點「開啟現版觀察畫面」，會打開既有服務：
+Open `http://127.0.0.1:5298/`. Clicking "Open the current observation view" opens the existing service:
 
 ```text
 http://127.0.0.1:5219/?render=construction&view=resident&shared=1&observer=8844
 ```
 
-本入口不會啟動、重啟或修改該服務。若服務未就緒，畫面本身可能回報中斷；本包沒有固定圖片、預錄影片或假場景補上。
+This entry point does not start, restart, or change that service. If the service is not ready, the view itself may report an interruption. This package does not substitute a fixed image, a pre-recorded video, or a fake scene.
 
-檢查按鈕只對固定的 `8844/api/shared-test/base` 與 `/frame` 發出 GET，沒有自動輪詢。base 的本文會立即丟棄；frame 經有界讀取後也會丟棄，不保存世界資料，也不下載核心生成規則。
+The check button only sends GET requests to the fixed `8844/api/shared-test/base` and `/frame` endpoints. It does not poll automatically. The base response body is discarded immediately. The frame response is read within a bound and then discarded. No world data is saved, and no core generation rules are downloaded.
 
-## 檢查
+## How to check
 
 ```sh
 node --test tests/public-reader.test.mjs tests/observer-entry.test.mjs
 ```
 
-第一個測試保留既有公開讀取器的有界串流斷言，其餘只檢查新封裝的邊界。測試中的 upstream 是明確的 HTTP 測試替身，不是模型供應商，也不算真模型呼叫。執行輸出以包外驗證報告為準，本包不預先宣稱測試通過。
+The first test keeps the existing public reader's bounded-streaming assertion. The other tests only check the boundaries of this new package. The upstream used in the tests is an explicit HTTP test double. It is not a model provider, and it is not a real model call. Test results should be judged from the verification report outside this package. This package does not claim in advance that the tests pass.
 
-## 狀態與限制
+## What is intentionally not included
 
-- 依交接，base-18 readiness 的入口檔案曾由總管核對存在；這不等於真模型成功。
-- 指定 renderer 曾實際顯示「畫面中斷，請重新載入」，不能據此說 base-18 或居民已可見。這些是交接時的觀察，不是本包自行核實的最新運行終態。
-- 「公開介面可讀」只表示當次 HTTP 與格式檢查通過，未驗證完整投影准入、世界身分、已接受事件、持久保存、獨立重播或供應商結果。
-- 醒來、認人、記得、建造四個自主動作，在本包均未取得真模型與鏈上證據。本包沒有用導覽卡或假供應商補足這些缺件。
-- 真模型成果必須由該次供應商結果、已接受事件、保存與重播共同證明；本包沒有包含那些私人執行資料，所以不能獨立簽收真模型成果。
+This package does not include the white paper, the single-source-of-truth document, the economic route, the core generation rules, the full kernel or generator, the full renderer generation dependency chain, credential or key loaders, resident private seeds or memory, live databases, call directories, receipts, scopes, logs, recordings, historical source capsules, build output, or personal data.
 
-## 分工與原則
+The full shared-test observer references shape definitions and generation-related dependencies, so it has not been copied in full. Only the bounded public text reading function, which contains no generation logic, has been separated out. See [SOURCE_MAP.md](SOURCE_MAP.md) for the scope.
 
-人類只提供可以被忽略的引導，不控制居民。原執行者維持現有運行環境與真正測試；封裝者只整理受限觀察入口，驗證者核對入口與限制，交件者親自檢查及提交。
+The real renderer, observer, and authorised execution environment remain external dependencies. This package does not change the main branch, the running world, any database, or any Git state. It does not merge, push, publish, deploy, or submit on anyone's behalf. Submission is done by the owner in person.
 
-本包沒有居民指令、模型呼叫、世界寫入、服務管理或發布功能，也沒有改動正式版主線、正在運行的世界、資料庫或 Git 狀態。沒有自動合併、推送、發布、部署或代為交件。
+## Last verification
 
-## 刻意排除
+Around 2026-11-05 01:48 UTC, the standalone entry point started, and the public base and frame endpoints on port 8844 returned HTTP 200. After reloading, the specified renderer showed Lumen. A later read of the public frame on port 8844 contained Synthetic Solo.
 
-未收入白皮書、唯一真相文件、經濟路線、核心生成規則、完整 kernel／generator、完整 renderer 生成依賴鏈、憑證或金鑰載入器、居民私人種子／記憶、即時資料庫、通話目錄、收據、範圍、日誌、錄製、歷史來源膠囊、構建產物或個人資料。
-
-完整 shared-test observer 會引用形狀定義及生成相關依賴，因此沒有整包複製。只分離無生成邏輯的有界公開文字讀取函式；來源對照見 [SOURCE_MAP.md](SOURCE_MAP.md)。真正 renderer、observer 與經授權執行環境仍是外部依賴。
-
-## 最後核實
-
-2026-11-05 01:48 UTC 前後，獨立入口可啟動，8844 的公開 base／frame 回應 HTTP 200。指定 renderer 重新載入後曾顯示 Lumen；稍後讀取的 8844 公開 frame 則含 Synthetic Solo。
-
-兩次讀回並非同一瞬間，尚未驗證畫面與公開投影的一致性，亦未定位是時序、快取或路由問題。不能把這個畫面簽為 base-18 成果，也不能因 HTTP 200 宣稱真模型閉環完成。本包沒有保存原 frame，也沒有改動服務來消除這項不確定性。
+Those two reads were not taken at the same moment. Whether the view and the public projection agree has not yet been verified, and whether the difference is timing, caching, or routing has not yet been located. This view therefore cannot be presented as a completed formal result, and an HTTP 200 response alone cannot be presented as a completed real model loop. The original frame was not saved, and the service was not changed to remove this uncertainty.
